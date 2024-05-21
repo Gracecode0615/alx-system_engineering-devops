@@ -1,11 +1,21 @@
 #!/usr/bin/env bash
-# Server-01 login commands
+# Installs Nginx with the following configurations:
+#+    Listens on port 80.
+#+    Returns a page containing "Holberton School" when queried
+#++    at the root with a curl GET request.
 
-# Setting up the SSH-agent
-eval $("ssh-agent")
+apt-get update
+apt-get install -y nginx
 
-# Path to IdentityFile
-ssh-add ~/.ssh/school
+mkdir /etc/nginx/html
+touch /etc/nginx/html/index.html
+echo "Holberton School" > /etc/nginx/html/index.html
+printf %s "server {
+     listen      80 default_server;
+     listen      [::]:80 default_server;
+     root        /etc/nginx/html;
+     index       index.html index.htm;
+}
+" > /etc/nginx/sites-available/default
 
-# Username and IP Address 
-ssh ubuntu@100.26.136.168
+service nginx restart
